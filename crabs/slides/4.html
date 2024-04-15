@@ -1,0 +1,21 @@
+<h2>Cool things</h2>
+<ol>
+<li><p><a href="https://rustacean.net/">Ferris the crab</a></p>
+ <img src="https://rustacean.net/assets/rustacean-flat-gesture.png" width="200" height="200" />
+</li>
+<li><p>statements can return</p>
+<pre><code class="hljs language-rs"><span class="hljs-keyword">let</span> <span class="hljs-variable">multiplier</span> = <span class="hljs-keyword">if</span> rng.<span class="hljs-title function_ invoke__">gen_bool</span>(<span class="hljs-number">0.5</span>) {
+    DartMultipliers::Double
+} <span class="hljs-keyword">else</span> {
+    DartMultipliers::Triple
+};
+</code></pre></li>
+<li><p>match statements</p>
+<pre><code class="hljs language-rs"><span class="hljs-keyword">let</span> <span class="hljs-variable">multiplier</span> = <span class="hljs-keyword">match</span> rng.<span class="hljs-title function_ invoke__">gen_range</span>(<span class="hljs-number">0</span>..<span class="hljs-number">3</span>) {
+    <span class="hljs-number">0</span> =&gt; DartMultipliers::<span class="hljs-literal">None</span>,
+    <span class="hljs-number">1</span> =&gt; DartMultipliers::Double,
+    <span class="hljs-number">2</span> =&gt; DartMultipliers::Triple,
+    _ =&gt; DartMultipliers::<span class="hljs-literal">None</span> <span class="hljs-comment">// fallback case</span>
+};
+</code></pre></li>
+</ol>

@@ -1,0 +1,63 @@
+<h2>Rust according to Copilot:</h2>
+<p>Rust is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.</p>
+<h3>Features</h3>
+<ul>
+<li><strong>Performance</strong>: Rust is blazingly fast and memory-efficient with no runtime or garbage collector.</li>
+<li><strong>Reliability</strong>: Rust provides memory safety without using a garbage collector.</li>
+<li><strong>Productivity</strong>: Rust has great documentation, a friendly compiler with useful error messages, and top-notch tooling — an integrated package manager and build tool, smart multi-editor support with auto-completion, and type-checking.</li>
+</ul>
+<h3>Borrow checking</h3>
+<p>Instead of garbage collection, Rust uses a system of ownership with a set of rules that the compiler checks at compile time. The rules are:</p>
+<ul>
+<li>Each value in Rust has a variable that&#39;s called its owner.</li>
+<li>There can only be one owner at a time.</li>
+<li>When the owner goes out of scope, the value will be dropped.</li>
+</ul>
+<h4>Examples</h4>
+<h5>Mutable references</h5>
+<pre><code class="hljs language-rs"><span class="hljs-comment">// Not allowed</span>
+<span class="hljs-keyword">let</span> <span class="hljs-variable">round</span> = game.<span class="hljs-title function_ invoke__">current_round</span>().<span class="hljs-title function_ invoke__">unwrap</span>();
+<span class="hljs-keyword">let</span> <span class="hljs-variable">sad</span> = game.<span class="hljs-title function_ invoke__">advance_round</span>(); <span class="hljs-comment">// &lt;--- not allowed, as this would create a second mutable reference to game</span>
+
+<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;---- Round {} ----&quot;</span>, round.round_number);
+
+
+<span class="hljs-comment">// Allowed</span>
+<span class="hljs-keyword">let</span> <span class="hljs-variable">round</span> = game.<span class="hljs-title function_ invoke__">current_round</span>().<span class="hljs-title function_ invoke__">unwrap</span>();
+<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;---- Round {} ----&quot;</span>, round.round_number);
+
+<span class="hljs-keyword">let</span> <span class="hljs-variable">sad</span> = game.<span class="hljs-title function_ invoke__">advance_round</span>(); <span class="hljs-comment">// &lt;--- allowed as the reference to round is dropped</span>
+</code></pre><h5>Ownership 1</h5>
+<pre><code class="hljs language-rs">
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">do_something</span>(s: <span class="hljs-type">String</span>) {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, s);
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">s1</span> = <span class="hljs-type">String</span>::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">&quot;hello&quot;</span>);
+    <span class="hljs-title function_ invoke__">do_something</span>(s1);
+
+    <span class="hljs-comment">// This will not work, as s1 has been moved into do_something</span>
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, s1);
+</code></pre><h5>Ownership 2</h5>
+<pre><code class="hljs language-rs">
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">do_something</span>(s: &amp;<span class="hljs-type">String</span>) {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, s);
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">s1</span> = <span class="hljs-type">String</span>::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">&quot;hello&quot;</span>);
+    <span class="hljs-keyword">let</span> <span class="hljs-variable">s2</span> = s1;
+
+    <span class="hljs-title function_ invoke__">do_something</span>(&amp;s1); <span class="hljs-comment">// &lt;--- not allowed, as s1 has been moved to s2</span>
+}
+</code></pre><h3>TL;DR</h3>
+<ul>
+<li>The borrow checker takes some time getting used to</li>
+<li>Enums are everywhere, and they&#39;re good actually</li>
+</ul>
+<details>
+<img src="https://i.imgflip.com/8mtega.jpg" width="500" height="500" />
+<img src="https://i.imgflip.com/8mte61.jpg" width="500" height="500" />
+</details

@@ -1,0 +1,83 @@
+<h2>A dart player</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">use</span> std::{fmt, <span class="hljs-type">str</span>::FromStr};
+
+<span class="hljs-keyword">use</span> super::round::DartRound;
+
+<span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Player</span> {
+    <span class="hljs-keyword">pub</span> name: <span class="hljs-type">String</span>,
+    <span class="hljs-keyword">pub</span> computer: <span class="hljs-type">bool</span>,
+    <span class="hljs-keyword">pub</span> score: <span class="hljs-type">i32</span>,
+    <span class="hljs-keyword">pub</span> rounds: <span class="hljs-type">Vec</span>&lt;DartRound&gt;
+}
+
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">Player</span> {
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(name: <span class="hljs-type">String</span>, computer: <span class="hljs-type">bool</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-keyword">Self</span> {
+        Player {
+            name,
+            computer,
+            score: <span class="hljs-number">999</span>,
+            rounds: <span class="hljs-built_in">vec!</span>()
+        }
+    }
+
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">set_score</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, score: <span class="hljs-type">i32</span>) {
+        <span class="hljs-keyword">self</span>.score = score;
+    }
+}
+
+<span class="hljs-comment">// Add the clone trait to make it easier to pass the player around</span>
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">Clone</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">Player</span> {
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">clone</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-keyword">Self</span> {
+        Player {
+            name: <span class="hljs-keyword">self</span>.name.<span class="hljs-title function_ invoke__">clone</span>(),
+            computer: <span class="hljs-keyword">self</span>.computer,
+            score: <span class="hljs-keyword">self</span>.score,
+            rounds: <span class="hljs-built_in">vec!</span>()
+        }
+    }
+}
+
+<span class="hljs-comment">// Lets us print the player name by writing println!(&quot;{}&quot;, player)</span>
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">fmt</span>::Display <span class="hljs-keyword">for</span> <span class="hljs-title class_">Player</span> {
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">fmt</span>(&amp;<span class="hljs-keyword">self</span>, f: &amp;<span class="hljs-keyword">mut</span> fmt::Formatter) <span class="hljs-punctuation">-&gt;</span> fmt::<span class="hljs-type">Result</span> {
+        <span class="hljs-built_in">write!</span>(f, <span class="hljs-string">&quot;{}&quot;</span>, <span class="hljs-keyword">self</span>.name)
+    }
+}
+
+<span class="hljs-comment">// Lets us create a player from a string</span>
+<span class="hljs-comment">// Example: let player = &quot;Player 1&quot;.parse::&lt;Player&gt;();</span>
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">FromStr</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">Player</span> {
+    <span class="hljs-keyword">type</span> <span class="hljs-title class_">Err</span> = anyhow::Error;
+
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">from_str</span>(s: &amp;<span class="hljs-type">str</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Result</span>&lt;<span class="hljs-keyword">Self</span>, <span class="hljs-keyword">Self</span>::<span class="hljs-literal">Err</span>&gt; {
+        <span class="hljs-keyword">if</span> s.<span class="hljs-title function_ invoke__">len</span>() == <span class="hljs-number">0</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">Err</span>(anyhow::anyhow!(<span class="hljs-string">&quot;Player name cannot be empty&quot;</span>));
+        }
+
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">player</span> = Player::<span class="hljs-title function_ invoke__">new</span>(s.<span class="hljs-title function_ invoke__">to_string</span>(), <span class="hljs-literal">false</span>);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">Ok</span>(player);
+    }
+}
+
+<span class="hljs-comment">// Test can be added in the same file as the code</span>
+
+<span class="hljs-meta">#[cfg(test)]</span>
+<span class="hljs-keyword">mod</span> tests {
+    <span class="hljs-keyword">use</span> super::*;
+
+    <span class="hljs-meta">#[test]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">test_player</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">player</span> = Player::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">&quot;Player 1&quot;</span>.<span class="hljs-title function_ invoke__">to_string</span>(), <span class="hljs-literal">false</span>);
+
+        <span class="hljs-built_in">assert_eq!</span>(player.name, <span class="hljs-string">&quot;Player 1&quot;</span>);
+        <span class="hljs-built_in">assert_eq!</span>(player.computer, <span class="hljs-literal">false</span>);
+
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">player_string</span> = player.<span class="hljs-title function_ invoke__">to_string</span>();
+
+        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Player string: {}&quot;</span>, player);
+
+        <span class="hljs-built_in">assert_eq!</span>(player_string, <span class="hljs-string">&quot;Player 1&quot;</span>);
+    }
+}
+</code></pre>
